@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  gitea:
+    image: gitea/gitea:1.17.3
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - training
+    ports:
+      - "3000:3000"
+      - "222:22"
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - training
+    ports:
+      - "9000:9000"
+
+  jenkins:
+    image: awesome/webapp
+    container_name: jenkins
+    build: 
+      context: jenkins
+    restart: always
+    networks:
+      - training
+    ports:
+      - "8080:8080"
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    restart: always
+    networks:
+      - training
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+networks:
+  training:
+    external: false
